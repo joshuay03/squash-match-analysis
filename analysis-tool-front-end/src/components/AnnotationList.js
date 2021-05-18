@@ -27,12 +27,7 @@ export default function AnnotationList() {
           <div className="p-4">
 
           <div className="font-bold text-xl mb-3">Example Match {annotation}</div>
-
-            {/* <img className="w-full" src="https://squashmad.com/wp-content/uploads/2011/01/squash-match.jpg" alt="Example Squash Match Image"  /> */}
-            <video controls>
-              <source src={video} type="video/mp4" />
-              Your browser does not support HTML video.
-            </video>
+            <iframe src="https://www.youtube.com/embed/IzfAI4QRv-k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               <p className="text-gray-700 mt-2 text-base">
                 <strong> Player {annotation} vs Player {annotation+1} </strong>
               </p>
