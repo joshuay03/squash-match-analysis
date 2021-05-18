@@ -1,5 +1,4 @@
 import React from 'react';
-import video from '../Squash-Video.mp4';
 
 const annotations = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function AnnotationList() {
