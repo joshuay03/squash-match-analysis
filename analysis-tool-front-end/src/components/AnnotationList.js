@@ -3,37 +3,52 @@ import Modal from './Modal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
+let match_id = window.location.pathname;
+match_id = match_id.substring(7);
 
-const annotations = [
-    ["FH-V-Lob", "00:02:35"],
-    ["FH-B-Crosscourt", "00:02:35"],
-    ["FH-B-Kill", "00:02:35"],
-
-];
+const axios = require('axios').default;
 
 class AnnotationList extends React.Component {
+
   state = {
-      show: false,
-      message: " ",
-      title: "Edit Annotation",
-    };
-    showModal = (messageText) => {
+    annotations: [],
+    match_details: [],
+    show: false,
+    shotMsg: " ",
+    timeMsg: " ",
+    title: "Edit Annotation",
+  }
+
+
+  componentDidMount() {
+    axios.get('http://localhost:3001/annotate/'+match_id+'/all')
+      .then(res => {
+        const annotations = res.data;
+        this.setState({ annotations });
+      })
+
+    axios.get('http://localhost:3001/match/all').then(res => {
+      const obj = res.data.filter(item => item.id === match_id);
+      const match_details = obj[0];
+
+      this.setState({match_details});
+    })
+  }
+
+    showModal = (shotText, timeText) => {
     this.setState({
       show: !this.state.show,
-      message: messageText,
+      shotMsg: shotText,
+      timeMsg: timeText,
       title: "Edit Annotation",
 
     });
   };
 
-  constructor(props) {
-
-      super(props);
-
-      this.state = {
-          annotations: annotations,
-      }
+  handleChange = (event, field) => {
+    this.setState({ [field]: event.target.value });
   }
+
 
   onDeleteByIndex = (index) => {
       const newCountries = [...this.state.annotations];
@@ -45,15 +60,17 @@ class AnnotationList extends React.Component {
   }
 
     render() {
+
       return (
           <>
 
                   <div className="container mx-auto mb-10 overflow-y-auto h-full p-1	">
+                  <h1 className="text-white text-center text-lg font-bold mb-1" > {this.state.match_details.title} Annotations </h1>
 
 <table className="table-fixed bg-white w-full">
   <thead>
     <tr>
-      <th className="w-6/8 ...">Annotation</th>
+      <th className="w-6/8 ...">Annotation </th>
       <th className="w-2/8 ...">Time</th>
 
 
@@ -61,10 +78,10 @@ class AnnotationList extends React.Component {
   </thead>
   <tbody >
 
-  <Modal onClose={this.showModal} show={this.state.show} title={this.state.title}> {this.state.message}</Modal>
+  <Modal onClose={this.showModal} show={this.state.show} title={this.state.title}> Shot: {this.state.shotMsg} <br /> Time: <input type="number" onChange={(event)=>this.handleChange(event, "timeMsg")} value={this.state.timeMsg} /></Modal>
 
     {
-    this.state.annotations.map((key, index) => {
+    this.state.annotations.map((annotation, index) => {
 
       return( <>
 
@@ -74,15 +91,15 @@ class AnnotationList extends React.Component {
     <span class='tooltip shadow-lg px-3 py-1 bg-blue-600 text-white -mt-8'>
 
     <button type="button" onClick={e => {
-              this.showModal(annotations[index][0]);
+              this.showModal((annotation.components.hand + "-" + annotation.components.approach + "-" + annotation.components.shot),(annotation.timestamp));
          }}><FontAwesomeIcon className="pr-1" icon={faEdit} />Edit </button> |
     <button type="button" className="pl-2" onClick={() => this.onDeleteByIndex(index)}>
                 <FontAwesomeIcon  icon={faTrash} /> Remove
               </button></span>
-      <td className=""> <span className="overflow-x-hidden w-full px-2" >{key[0]} </span> </td>
+      <td className=""> <span className="overflow-x-hidden w-full px-2" >{annotation.components.hand}-{annotation.components.approach}-{annotation.components.shot}</span> </td>
       </div>
 
-      <td><a className="hover:text-blue-500" href="" >{annotations[index][1]}</a>
+      <td><a className="hover:text-blue-500" href="" >{annotation.timestamp}</a>
 
       </td>
         </tr>

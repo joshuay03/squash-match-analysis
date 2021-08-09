@@ -4,6 +4,7 @@ import MainMenu from './components/MainMenu';
 import NewMatch from './components/NewMatch';
 import AnnotationInterface from './components/AnnotationInterface';
 
+
 function App() {
   return (
     <div className="App">
@@ -21,6 +22,11 @@ function App() {
         <Route path="/new/match">
           <NewMatch />
         </Route>
+
+        <Route path="/match/:id">
+          <AnnotationInterface />
+        </Route>
+
       </Router>
     </div>
   );

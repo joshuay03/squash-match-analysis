@@ -1,10 +1,15 @@
 import { React, useState, useEffect } from 'react';
 import AnnotationButton from './AnnotationButton';
+import AnnotationList from './AnnotationList';
+
 
 const axios = require('axios').default;
+let match_id = window.location.pathname;
+match_id = match_id.substring(7);
+console.log(match_id);
 
 export default function AnnotationControls() {
-  const apiUrl = 'http://localhost:3001/annotate/60fbd9fc93c90bd2a9b15eb1/new'
+  const apiUrl = 'http://localhost:3001/annotate/'+ match_id + '/new'
   const [hand, setHand] = useState('');
   const [approach, setApproach] = useState('');
   const [shot, setShot] = useState('');
@@ -16,7 +21,9 @@ export default function AnnotationControls() {
     lob: 'Lob',
     drop: 'Drop',
     nick: 'Nick',
-    kill: 'Kill'
+    kill: 'Kill',
+    boast: 'Boast'
+
   });
   const [shotButtons, setShotButtons] = useState([]);
   const numAdditionalButtons = 8;
@@ -91,6 +98,8 @@ export default function AnnotationControls() {
   }, [hand, approach, shot]);
 
   return (
+    <>
+
     <div className="h-full">
       <ul className="grid grid-cols-2 grid-rows-9 mx-4 py-4 gap-x-4 gap-y-6 h-full place-items-center">
         <li className="w-full h-full" onClick={() => updateHand(HandEnum.forehand)}>
@@ -109,5 +118,6 @@ export default function AnnotationControls() {
         {additionalButtons}
       </ul>
     </div>
+    </>
   );
 }

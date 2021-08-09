@@ -57,7 +57,7 @@ export default function MainMenu() {
                     </p>
                     <p>{match.description}</p>
                     <div className="pt-3 pb-2">
-                      <a href="/view_this">
+                      <a href={"/match/"+match.id}>
                         <button className="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 mx-1">
                           View
                         </button>
