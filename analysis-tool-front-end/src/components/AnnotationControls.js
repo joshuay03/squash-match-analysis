@@ -8,7 +8,8 @@ let match_id = window.location.pathname;
 match_id = match_id.substring(7);
 console.log(match_id);
 
-export default function AnnotationControls() {
+export default function AnnotationControls(props) {
+
   const apiUrl = 'http://localhost:3001/annotate/'+ match_id + '/new'
   const [hand, setHand] = useState('');
   const [approach, setApproach] = useState('');
@@ -94,6 +95,7 @@ export default function AnnotationControls() {
       axios.post(apiUrl, annotation)
       .then(res => console.log(res.data))
       .then(resetControls());
+      props.handler(annotation);
     }
   }, [hand, approach, shot]);
 

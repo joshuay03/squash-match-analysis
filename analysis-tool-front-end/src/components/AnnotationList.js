@@ -3,38 +3,13 @@ import Modal from './Modal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
-let match_id = window.location.pathname;
-match_id = match_id.substring(7);
+
 
 const axios = require('axios').default;
 
 class AnnotationList extends React.Component {
 
-  state = {
-    annotations: [],
-    match_details: [],
-    show: false,
-    shotMsg: " ",
-    timeMsg: " ",
-    title: "Edit Annotation",
-  }
-
-
-  componentDidMount() {
-    axios.get('http://localhost:3001/annotate/'+match_id+'/all')
-      .then(res => {
-        const annotations = res.data;
-        this.setState({ annotations });
-      })
-
-    axios.get('http://localhost:3001/match/all').then(res => {
-      const obj = res.data.filter(item => item.id === match_id);
-      const match_details = obj[0];
-
-      this.setState({match_details});
-    })
-  }
-
+  state = this.props.data;
     showModal = (shotText, timeText) => {
     this.setState({
       show: !this.state.show,
@@ -51,11 +26,12 @@ class AnnotationList extends React.Component {
 
 
   onDeleteByIndex = (index) => {
-      const newCountries = [...this.state.annotations];
-      newCountries.splice(index, 1);
+      const newAnnotations = this.props.data.annotations;
+      newAnnotations.splice(index, 1);
+      console.log(newAnnotations);
 
       this.setState(state => ({
-          annotations: newCountries
+          annotations: newAnnotations
       }));
   }
 
@@ -65,7 +41,7 @@ class AnnotationList extends React.Component {
           <>
 
                   <div className="container mx-auto mb-10 overflow-y-auto h-full p-1	">
-                  <h1 className="text-white text-center text-lg font-bold mb-1" > {this.state.match_details.title} Annotations </h1>
+                  <h1 className="text-white text-center text-lg font-bold mb-1" > {this.props.data.match_details.title} Annotations </h1>
 
 <table className="table-fixed bg-white w-full">
   <thead>
@@ -81,14 +57,14 @@ class AnnotationList extends React.Component {
   <Modal onClose={this.showModal} show={this.state.show} title={this.state.title}> Shot: {this.state.shotMsg} <br /> Time: <input type="number" onChange={(event)=>this.handleChange(event, "timeMsg")} value={this.state.timeMsg} /></Modal>
 
     {
-    this.state.annotations.map((annotation, index) => {
+    this.props.data.annotations.map((annotation, index) => {
 
       return( <>
 
 
         <tr className="text-center border-t-2 border-fuchsia-600">
         <div class='has-tooltip'>
-    <span class='tooltip shadow-lg px-3 py-1 bg-blue-600 text-white -mt-8'>
+    <span class='tooltip shadow-lg px-3 py-1 bg-blue-600 text-white '>
 
     <button type="button" onClick={e => {
               this.showModal((annotation.components.hand + "-" + annotation.components.approach + "-" + annotation.components.shot),(annotation.timestamp));
