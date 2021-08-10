@@ -27,7 +27,6 @@ function App() {
           <AnnotationInterface />
         </Route>
 
-      </Router>
     </div>
   );
 }
