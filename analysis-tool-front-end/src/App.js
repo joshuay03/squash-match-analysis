@@ -25,7 +25,8 @@ function App() {
 
         <Route path="/match/:id">
           <AnnotationInterface />
-        </Route>
+          </Route>
+        </Router>
 
     </div>
   );
