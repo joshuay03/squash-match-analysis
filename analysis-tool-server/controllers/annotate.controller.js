@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
     { $push: { annotations: _new } })
   );
 
-  if (err || result.nModified === 0) return res.status(400).json('Failed to create annotation.');
+  if (err || result.nModified === 0) return res.status(400).json(err);
 
   return res.status(200).json(_new._id);
 };
@@ -23,7 +23,7 @@ const get = async (req, res, next) => {
     { _id: req.params.match_id, annotations: { _id: req.params.annotation_id } }
   ));
 
-  if (err || !result) return res.status(400).json('Failed to get annotation.');
+  if (err || !result) return res.status(400).json(err);
 
   const annotation = util.transformAnnotations([result])[0];
 
@@ -36,7 +36,7 @@ const getAll = async (req, res, next) => {
     { _id: req.params.match_id, annotations: { _id: req.params.annotation_id } }
   ));
 
-  if (err || !result) return res.status(400).json('Failed to get annotations.');
+  if (err || !result) return res.status(400).json(err);
 
   const annotations = util.transformAnnotations(result.annotations);
 
@@ -56,7 +56,7 @@ const edit = async (req, res, next) => {
     }
   ).setOptions({ omitUndefined: true }));
 
-  if (err || result.nModified === 0) return res.status(400).json('Failed to update annotation.');
+  if (err || result.nModified === 0) return res.status(400).json(err);
 
   return res.status(200).json('Successfully updated the annotation.');
 };
@@ -68,7 +68,7 @@ const remove = async (req, res, next) => {
     { $pull: { annotations: { _id: req.params.annotation_id } } }
   ));
 
-  if (err || result.nModified === 0) return res.status(400).json('Failed to remove annotation.');
+  if (err || result.nModified === 0) return res.status(400).json(err);
 
   return res.status(200).json('Successfully removed the annotation.');
 };

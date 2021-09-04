@@ -5,7 +5,7 @@ const handle = (promise) => {
 	return promise
 		.then(result => ([result, undefined]))
 		.catch(error => Promise.resolve([undefined, error]));
-}
+};
 
 
 const transformMatches = (matches) => {
@@ -40,7 +40,11 @@ const handleFileUpload = (_file, path) => {
 	return handle(
 		new Promise((resolve, reject) => {
 			_file.mv(path, function (err) {
-				if (err) reject(new Error('Failed to upload file.'));
+				if (err) reject({
+					name: 'I/O Error: failed to upload file',
+					trace: 'handleFileUpload',
+					path: path
+				});
 				else resolve('File successfully uploaded.');
 			})
 		})
@@ -52,7 +56,11 @@ const handleFileRemoval = (path) => {
 	return handle(
 		new Promise((resolve, reject) => {
 			fs.unlink(path, function (err) {
-				if (err) reject(new Error('Failed to remove file.'));
+				if (err) reject({
+					name: 'I/O Error: failed to remove file',
+					trace: 'handleFileRemoval',			
+					path: path
+				});
 				else resolve('File successfully removed.');
 			})
 		})

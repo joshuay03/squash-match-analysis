@@ -7,7 +7,7 @@ const { Match } = require('../models/Match');
 const create = async (req, res, next) => {
   const [result, err] = await util.handle(Match.create(req.body));
 
-  if (err || !result) return res.status(400).json('Failed to create match.');
+  if (err || !result) return res.status(400).json(err);
 
   return res.status(200).json({match_id: result._id});
 };
@@ -16,7 +16,7 @@ const create = async (req, res, next) => {
 const get = async (req, res, next) => {
   const [result, err] = await util.handle(Match.findById(req.params.match_id));
 
-  if (err || !result) return res.status(400).json('Failed to get match.');
+  if (err || !result) return res.status(400).json(err || 'Match not found.');
 
   const match = util.transformMatches([result])[0];
 
@@ -27,7 +27,7 @@ const get = async (req, res, next) => {
 const getAll = async (req, res, next) => {
   const [result, err] = await util.handle(Match.find());
 
-  if (err || !result) return res.status(400).json('Failed to retrieve matches.');
+  if (err || !result) return res.status(400).json(err || 'No matches found.');
 
   const matches = util.transformMatches(result);
 
@@ -45,7 +45,7 @@ const update = async (req, res, next) => {
     }
   ).setOptions({ omitUndefined: true }));
 
-  if (err || result.nModified === 0) return res.status(400).json('Failed to update match.');
+  if (err || result.nModified === 0) return res.status(400).json(err);
 
   return res.status(200).json('Successfully updated the match.');
 };
@@ -54,13 +54,13 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   let [result, err] = await util.handle(Match.deleteOne({ _id: req.params.match_id }));
 
-  if (err || result.deletedCount === 0) return res.status(400).json('Failed to remove match.');
+  if (err || result.deletedCount === 0) { return res.status(400).json(err || 'Match not found.'); }
 
   const _path = path.join(__dirname + '../videos/' + req.params.match_id);
 
   [result, err] = await util.handleFileRemoval(_path);
 
-  if (err) return res.status(400).json(err.message);
+  if (err) return res.status(400).json(err);
 
   return res.status(200).json('Successfully removed the match.');
 };
