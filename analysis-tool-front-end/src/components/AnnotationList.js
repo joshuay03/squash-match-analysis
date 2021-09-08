@@ -52,10 +52,11 @@ export default function AnnotationList({
     if (match.id) {
       axios
         .get(baseUrl + '/annotate/' + match.id + '/all')
-        .then((res) => res.data)
+        .then((res) => res.data.sort((a, b) => a.timestamp - b.timestamp))
         .then((annotations) => {
-          setAnnotations(annotations.filter((annotation) => annotation.components.type === 'shot'));
-          setFilterAnnotations(annotations.filter((annotation) => annotation.components.type === 'shot'));
+
+          setAnnotations(annotations);
+          setFilterAnnotations(annotations);
         });
     }
   }, [annotationToRemove, match]);
@@ -258,7 +259,7 @@ export default function AnnotationList({
           onClick={toggleFilter}
         >
           {' '}
-          Cancel{' '}
+          Close{' '}
         </button>
       </div>
     </div>
@@ -289,7 +290,7 @@ export default function AnnotationList({
               {filterAnnotations.map((annotation) => {
                 return (
                   <>
-                    <tr className="text-center border-t-2 border-fuchsia-600">
+                    <tr className="text-center border-t-2 border-fuchsia-600 "> 
                       <div className="has-tooltip">
                         <span className="tooltip shadow-lg px-3 py-1 bg-blue-600 text-white -mt-8">
                           <button
@@ -314,18 +315,26 @@ export default function AnnotationList({
                           </button>
                         </span>
                         <td className="">
+                        {annotation.components.id == "New Game" &&
+                            <span className="grid place-items-center text-red-600 font-bold overflow-x-hidden w-full px-2">
+                            {annotation.components.id}
+                          </span>
+                          }
+                          {annotation.components.id != "New Game" &&
+
                           <span className="grid place-items-center overflow-x-hidden w-full px-2">
                             {annotation.components.id}
                           </span>
+                          }
                         </td>
                       </div>
                       <td>
-                        <button
-                          className="hover:text-blue-500"
-                          onClick={() => jumpToAnnotation(annotation.timestamp)}
-                        >
-                          {convertSecondsToMS(annotation.timestamp)}
-                        </button>
+                      <button
+                        className="hover:text-blue-500"
+                        onClick={() => jumpToAnnotation(annotation.timestamp)}
+                      >
+                        {convertSecondsToMS(annotation.timestamp)}
+                      </button>
                       </td>
                     </tr>
                   </>

@@ -61,8 +61,8 @@ export default function AnnotationInterface(props) {
 
   return (
     <>
-      <div className="grid grid-cols-16 mx-2 w-full h-full">
-        <div className="col-span-3 mr-1 h-desktop">
+      <div className="grid grid-cols-16 w-full h-full">
+        <div className="col-span-3 ml-1 h-desktop">
           <AnnotationList
             baseUrl={baseUrl}
             match={match}
@@ -70,7 +70,7 @@ export default function AnnotationInterface(props) {
             jumpToAnnotation={jumpToAnnotation}
           />
         </div>
-        <div className="col-span-13 ml-1 mr-16 h-desktop">
+        <div className="col-span-12 ml-2 mr-2 h-desktop">
           <AnnotationVideo
             videoUrl={videoUrl}
             seekTime={seekTime}
